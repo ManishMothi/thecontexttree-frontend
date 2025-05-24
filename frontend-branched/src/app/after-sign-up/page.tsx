@@ -12,7 +12,7 @@ export default function AfterSignUp() {
   useEffect(() => {
     // Call backend to ensure user exists in DB
     clerkApiFetch(`${API_BASE}/api/v1/auth/clerk_jwt`, { method: "POST" })
-      .then(async (res) => {
+      .then(() => {
         // Optionally handle errors here
         // Always redirect to dashboard after attempt
         router.replace("/dashboard");
