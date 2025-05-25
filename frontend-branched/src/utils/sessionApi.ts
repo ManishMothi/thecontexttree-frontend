@@ -2,14 +2,14 @@ import { useClerkApiFetch } from "./clerkApiFetch";
 import { useAuth } from "@clerk/nextjs";
 import { useCallback, useRef, useState, useEffect } from "react";
 
-interface ChatSession {
+export interface ChatSession {
   id: string;
   user_id: string;
   created_at: string;
   nodes: TreeNode[];
 }
 
-interface TreeNode {
+export interface TreeNode {
   id: string;
   chat_session_id: string;
   parent_id: string | null;
@@ -17,6 +17,18 @@ interface TreeNode {
   llm_response: string;
   created_at: string;
   children: TreeNode[];
+}
+
+interface CreateSessionResponse {
+  id: string;
+  user_id: string;
+  created_at: string;
+  nodes: [];
+}
+
+interface CreateNodeParams {
+  parent_id: string | null;
+  user_message: string;
 }
 
 export function useSessionApi() {
@@ -43,13 +55,24 @@ export function useSessionApi() {
     setIsFetching(true);
     try {
       const response = await clerkApiFetch(`${API_BASE}/api/v1/sessions/user/${userId}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch user sessions');
+      
+      if (response.status === 401) {
+        // Handle unauthorized (likely invalid/expired token)
+        throw new Error('Session expired. Please sign in again.');
       }
+      
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.detail || 'Failed to fetch user sessions');
+      }
+      
       const data = await response.json();
       setCachedSessions(data);
       lastFetchTimeRef.current = Date.now();
       return data;
+    } catch (error) {
+      console.error('Error fetching sessions:', error);
+      throw error; // Re-throw to be handled by the caller
     } finally {
       setIsFetching(false);
     }
@@ -107,17 +130,91 @@ export function useSessionApi() {
       }
     }
 
-    // If not in cache, fetch it
+    // If not in cache, fetch it with JWT auth
     const response = await clerkApiFetch(`${API_BASE}/api/v1/sessions/${sessionId}`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch session ${sessionId}`);
+    
+    if (response.status === 401) {
+      // Handle unauthorized (likely invalid/expired token)
+      throw new Error('Session expired. Please sign in again.');
     }
+    
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.detail || `Failed to fetch session ${sessionId}`);
+    }
+    
     return response.json();
   }, [API_BASE, clerkApiFetch, cachedSessions]);
+
+  const createSession = async (): Promise<CreateSessionResponse> => {
+    const response = await clerkApiFetch(`${API_BASE}/api/v1/sessions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.detail || 'Failed to create session');
+    }
+
+    return response.json();
+  };
+
+  const sendMessage = async (sessionId: string, branchId: string, message: string): Promise<TreeNode> => {
+    const response = await clerkApiFetch(
+      `${API_BASE}/api/v1/sessions/${sessionId}/branches/${branchId}/msgs`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          parent_id: branchId,
+          user_message: message,
+        } as CreateNodeParams),
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.detail || 'Failed to send message');
+    }
+
+    return response.json();
+  };
+
+  const createBranch = async (sessionId: string, parentId: string, message: string): Promise<TreeNode> => {
+    const response = await clerkApiFetch(
+      `${API_BASE}/api/v1/sessions/${sessionId}/branches`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          parent_id: parentId,
+          user_message: message,
+        } as CreateNodeParams),
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.detail || 'Failed to create branch');
+    }
+
+    return response.json();
+  };
 
   return {
     getSessions,
     getSession,
+    createSession,
+    sendMessage,
+    createBranch,
     refreshSessions: () => getSessions(true),
   };
 }
