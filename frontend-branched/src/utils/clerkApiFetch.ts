@@ -16,7 +16,6 @@ export function useClerkApiFetch() {
     const token = await getToken();
     if (!token)
       throw new Error("No Clerk session token found. Are you signed in?");
-    console.log("Clerk JWT token:", token);
     const headers = new Headers(options.headers || {});
     headers.set("Authorization", `Bearer ${token}`);
     return fetch(endpoint, {
