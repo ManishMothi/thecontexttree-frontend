@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import { useClerkApiFetch } from "@/utils/clerkApiFetch";
 import { useAuth } from "@clerk/nextjs";
+import { ApiUsage } from "@/components/api-usage";
 
 interface ApiKey {
   id: string;
@@ -60,8 +61,9 @@ export default function Dashboard() {
   };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-muted">
-      <Card className="w-full max-w-2xl">
+    <main className="min-h-screen bg-muted py-8 px-4">
+      <div className="max-w-4xl mx-auto space-y-8">
+      <Card className="w-full">
         <CardHeader>
           <CardTitle>API Keys</CardTitle>
         </CardHeader>
@@ -140,6 +142,9 @@ export default function Dashboard() {
           <Button onClick={() => setShowDialog(false)}>Close</Button>
         </div>
       </Dialog>
+
+      <ApiUsage />
+    </div>
     </main>
   );
 }

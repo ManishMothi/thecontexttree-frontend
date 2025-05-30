@@ -9,7 +9,6 @@ import {
   Send,
   Plus,
   RefreshCw,
-  GitBranch,
   ChevronDown,
   ChevronUp,
   Trash2,
@@ -109,7 +108,6 @@ export default function PlaygroundPage() {
   const [loading, setLoading] = useState(true);
   const [isCreatingSession, setIsCreatingSession] = useState(false);
   const [isSendingMessage, setIsSendingMessage] = useState(false);
-  const [isCreatingBranch, setIsCreatingBranch] = useState(false);
   const [showNewSessionInput, setShowNewSessionInput] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -118,7 +116,6 @@ export default function PlaygroundPage() {
     getSessions,
     getSession,
     createSession: createNewSession,
-    sendMessage: sendNewMessage,
     createBranch: createNewBranch,
     deleteSession,
     deleteBranch,
@@ -269,10 +266,11 @@ export default function PlaygroundPage() {
       setIsSendingMessage(true);
       setError(null);
 
-      const newNode = await sendNewMessage(
+      const newNode = await createNewBranch(
         selectedSession.id,
         selectedNode.id,
-        message
+        message,
+        false // isNewBranch is false to create a child node
       );
 
       // Immediately update the UI optimistically
@@ -280,20 +278,28 @@ export default function PlaygroundPage() {
       setSelectedSession(updatedSession);
 
       // Update sessions list to reflect the change
-      const updatedSessions = sessions.map((session) =>
-        session.id === updatedSession.id ? updatedSession : session
+      const updatedSessions = sessions.map((s) =>
+        s.id === selectedSession.id ? updatedSession : s
       );
       setSessions(updatedSessions);
 
       // Find and set the new node as selected
       const findAndSetNode = (nodes: TreeNode[]): boolean => {
         for (const node of nodes) {
-          if (node.id === newNode.id) {
-            setSelectedNode(node);
-            return true;
+          if (node.id === selectedNode.id) {
+            // Find the new node in the children
+            const newChild = node.children.find(
+              (child) => child.id === newNode.id
+            );
+            if (newChild) {
+              setSelectedNode(newChild);
+              return true;
+            }
           }
-          if (node.children && findAndSetNode(node.children)) {
-            return true;
+          if (node.children && node.children.length > 0) {
+            if (findAndSetNode(node.children)) {
+              return true;
+            }
           }
         }
         return false;
@@ -313,65 +319,12 @@ export default function PlaygroundPage() {
     }
   };
 
-  const handleCreateBranch = async (message: string) => {
-    if (!selectedSession || !selectedNode) return;
+  const [expandedMessages, setExpandedMessages] = useState<Record<string, boolean>>({});
 
-    try {
-      setIsCreatingBranch(true);
-      setError(null);
-
-      const newNode = await createNewBranch(
-        selectedSession.id,
-        selectedNode.id,
-        message
-      );
-
-      // Immediately update the UI
-      const updatedSession = await getSession(selectedSession.id);
-      setSelectedSession(updatedSession);
-
-      // Update sessions list to reflect the change
-      const updatedSessions = sessions.map((session) =>
-        session.id === updatedSession.id ? updatedSession : session
-      );
-      setSessions(updatedSessions);
-
-      // Find and set the new node as selected
-      const findAndSetNode = (nodes: TreeNode[]): boolean => {
-        for (const node of nodes) {
-          if (node.id === newNode.id) {
-            setSelectedNode(node);
-            return true;
-          }
-          if (node.children && findAndSetNode(node.children)) {
-            return true;
-          }
-        }
-        return false;
-      };
-
-      findAndSetNode(updatedSession.nodes);
-    } catch (err) {
-      console.error("Error creating branch:", err);
-      setError("Failed to create branch. Please try again.");
-      // Re-fetch to ensure we're in sync
-      if (selectedSession) {
-        const refreshedSession = await getSession(selectedSession.id);
-        setSelectedSession(refreshedSession);
-      }
-    } finally {
-      setIsCreatingBranch(false);
-    }
-  };
-
-  const [expandedMessages, setExpandedMessages] = useState<
-    Record<string, boolean>
-  >({});
-
-  const toggleExpand = useCallback((nodeId: string) => {
-    setExpandedMessages((prev) => ({
+  const toggleExpand = useCallback((content: string) => {
+    setExpandedMessages(prev => ({
       ...prev,
-      [nodeId]: !prev[nodeId],
+      [content]: !prev[content]
     }));
   }, []);
 
@@ -711,35 +664,21 @@ export default function PlaygroundPage() {
                     <div className="space-y-4">
                       <div className="bg-blue-50 p-4 rounded-md">
                         <h3 className="font-medium mb-2">
-                          Continue this conversation off this node!
+                          Continue from selected node
                         </h3>
                         <MessageInput
                           onSubmit={handleSendMessage}
                           isSubmitting={isSendingMessage}
                           placeholder="Type your message..."
                         />
-                      </div>
-                      <div className="bg-purple-50 p-4 rounded-md">
-                        <h3 className="font-medium mb-2">
-                          Or create a new branch off this node!
-                        </h3>
-                        <MessageInput
-                          onSubmit={handleCreateBranch}
-                          isSubmitting={isCreatingBranch}
-                          buttonText={
-                            <span className="flex items-center">
-                              <GitBranch className="h-4 w-4 mr-1" />
-                              Create Branch
-                            </span>
-                          }
-                          placeholder="Enter a message you would like to branch off for this conversation..."
-                        />
+                        <p className="text-xs text-gray-500 mt-2">
+                          This will create a new message as a child of the selected node.
+                        </p>
                       </div>
                     </div>
                   ) : (
                     <div className="text-center text-gray-500">
-                      Select a conversation node to continue the conversation or
-                      create a branch.
+                      Select a conversation node to continue the conversation.
                     </div>
                   )}
                 </div>

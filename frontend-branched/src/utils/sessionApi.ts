@@ -179,37 +179,11 @@ export function useSessionApi() {
     return response.json();
   };
 
-  const sendMessage = async (
-    sessionId: string,
-    branchId: string,
-    message: string
-  ): Promise<TreeNode> => {
-    const response = await clerkApiFetch(
-      `${API_BASE}/api/v1/sessions/${sessionId}/branches/${branchId}/msgs`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          parent_id: branchId,
-          user_message: message,
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({}));
-      throw new Error(error.detail || "Failed to send message");
-    }
-
-    return response.json();
-  };
-
   const createBranch = async (
     sessionId: string,
     parentId: string,
-    message: string
+    message: string,
+    isNewBranch: boolean = false
   ): Promise<TreeNode> => {
     const response = await clerkApiFetch(
       `${API_BASE}/api/v1/sessions/${sessionId}/branches`,
@@ -221,13 +195,17 @@ export function useSessionApi() {
         body: JSON.stringify({
           parent_id: parentId,
           user_message: message,
+          is_new_branch: isNewBranch,
         }),
       }
     );
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({}));
-      throw new Error(error.detail || "Failed to create branch");
+      const errorMessage = isNewBranch 
+        ? "Failed to create branch" 
+        : "Failed to send message";
+      throw new Error(error.detail || errorMessage);
     }
 
     return response.json();
@@ -306,7 +284,6 @@ export function useSessionApi() {
     getSessions,
     getSession,
     createSession,
-    sendMessage,
     createBranch,
     deleteSession,
     deleteBranch,
