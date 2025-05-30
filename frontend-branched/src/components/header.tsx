@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import Image from "next/image";
+import {
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 
 const navLinks = [
   { name: "Dashboard", href: "/dashboard" },
@@ -17,16 +24,25 @@ export function Header() {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <nav className="flex items-center space-x-6">
-            <Link href="/" className="text-lg font-semibold">
-              Context Tree
+            <Link href="/" className="flex items-center text-xl font-bold">
+              <Image
+                src="/branched-logo.png"
+                alt="Context Tree Logo"
+                width={28}
+                height={28}
+                className="mr-2"
+              />
+              TheContextTree
             </Link>
             <div className="hidden md:flex space-x-6">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-sm font-medium transition-colors hover:text-primary ${
-                    pathname === link.href ? "text-black" : "text-muted-foreground"
+                  className={`text-base font-medium transition-colors hover:text-primary ${
+                    pathname === link.href
+                      ? "text-black font-semibold"
+                      : "text-muted-foreground"
                   }`}
                 >
                   {link.name}
@@ -39,12 +55,12 @@ export function Header() {
               <div className="flex space-x-2">
                 <SignInButton mode="modal">
                   <button className="px-3 py-1.5 text-sm font-medium rounded-md border border-gray-300 hover:bg-gray-50">
-                    Sign in
+                    Log in
                   </button>
                 </SignInButton>
                 <SignUpButton mode="modal">
                   <button className="px-3 py-1.5 text-sm font-medium text-white bg-black rounded-md hover:bg-gray-800">
-                    Sign up
+                    Get Branched Free
                   </button>
                 </SignUpButton>
               </div>
