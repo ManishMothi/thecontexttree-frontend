@@ -304,6 +304,269 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Practical Applications Section */}
+        <section className="py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Practical Applications Across Industries
+              </h2>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                See how ContextTree&apos;s branching capabilities transform
+                complex workflows across different domains.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {/* Customer Support */}
+              <Card className="p-6 border border-gray-200 hover:shadow-md transition-shadow">
+                <div className="bg-blue-50 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                  <svg
+                    className="w-6 h-6 text-blue-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Customer Support</h3>
+                <p className="text-gray-600 mb-4">
+                  Handle complex support scenarios with multiple resolution
+                  paths while maintaining context for each branch.
+                </p>
+                <div className="bg-gray-50 p-4 rounded-lg text-sm">
+                  <p className="font-medium mb-2">Example Flow:</p>
+                  <ul className="space-y-2 text-gray-600">
+                    <li className="flex items-start">
+                      <span className="text-green-500 mr-2">→</span>
+                      <span>Standard refund process</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-blue-500 mr-2">↳</span>
+                      <span>Supervisor branch: Offer 20% coupon</span>
+                    </li>
+                  </ul>
+                </div>
+              </Card>
+
+              {/* Software Development */}
+              <Card className="p-6 border border-gray-200 hover:shadow-md transition-shadow">
+                <div className="bg-purple-50 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                  <svg
+                    className="w-6 h-6 text-purple-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Code Generation</h3>
+                <p className="text-gray-600 mb-4">
+                  Explore multiple implementations and optimizations without
+                  losing your original code.
+                </p>
+                <div className="bg-gray-50 p-4 rounded-lg text-sm">
+                  <p className="font-medium mb-2">Example Flow:</p>
+                  <ul className="space-y-2 text-gray-600">
+                    <li className="flex items-start">
+                      <span className="text-green-500 mr-2">→</span>
+                      <span>Write quicksort in Python</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-blue-500 mr-2">↳</span>
+                      <span>Branch A: Optimize for readability</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-blue-500 mr-2">↳</span>
+                      <span>Branch B: Optimize for speed with NumPy</span>
+                    </li>
+                  </ul>
+                </div>
+              </Card>
+
+              {/* Financial Planning */}
+              <Card className="p-6 border border-gray-200 hover:shadow-md transition-shadow">
+                <div className="bg-green-50 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                  <svg
+                    className="w-6 h-6 text-green-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold mb-3">
+                  Financial Planning
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  Model different financial scenarios while keeping assumptions
+                  and outcomes clearly separated.
+                </p>
+                <div className="bg-gray-50 p-4 rounded-lg text-sm">
+                  <p className="font-medium mb-2">Example Flow:</p>
+                  <ul className="space-y-2 text-gray-600">
+                    <li className="flex items-start">
+                      <span className="text-green-500 mr-2">→</span>
+                      <span>Retirement at 65 plan</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-blue-500 mr-2">↳</span>
+                      <span>Branch A: Conservative portfolio</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-blue-500 mr-2">↳</span>
+                      <span>Branch B: Aggressive allocation</span>
+                    </li>
+                  </ul>
+                </div>
+              </Card>
+
+              {/* Legal Documentation */}
+              <Card className="p-6 border border-gray-200 hover:shadow-md transition-shadow">
+                <div className="bg-amber-50 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                  <svg
+                    className="w-6 h-6 text-amber-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold mb-3">
+                  Legal Documentation
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  Maintain multiple document variants with different clauses
+                  while preserving a clean audit trail.
+                </p>
+                <div className="bg-gray-50 p-4 rounded-lg text-sm">
+                  <p className="font-medium mb-2">Example Flow:</p>
+                  <ul className="space-y-2 text-gray-600">
+                    <li className="flex items-start">
+                      <span className="text-green-500 mr-2">→</span>
+                      <span>Draft NDA template</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-blue-500 mr-2">↳</span>
+                      <span>Branch A: Mutual NDA</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-blue-500 mr-2">↳</span>
+                      <span>Branch B: One-way NDA</span>
+                    </li>
+                  </ul>
+                </div>
+              </Card>
+
+              {/* Policy FAQ */}
+              <Card className="p-6 border border-gray-200 hover:shadow-md transition-shadow">
+                <div className="bg-cyan-50 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                  <svg
+                    className="w-6 h-6 text-cyan-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Policy FAQ</h3>
+                <p className="text-gray-600 mb-4">
+                  Provide accurate, region-specific policy information while
+                  maintaining a single source of truth.
+                </p>
+                <div className="bg-gray-50 p-4 rounded-lg text-sm">
+                  <p className="font-medium mb-2">Example Flow:</p>
+                  <ul className="space-y-2 text-gray-600">
+                    <li className="flex items-start">
+                      <span className="text-green-500 mr-2">→</span>
+                      <span>PTO policy question</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-blue-500 mr-2">↳</span>
+                      <span>Branch A: US employees</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-blue-500 mr-2">↳</span>
+                      <span>Branch B: EU employees</span>
+                    </li>
+                  </ul>
+                </div>
+              </Card>
+
+              {/* Creative Writing */}
+              <Card className="p-6 border border-gray-200 hover:shadow-md transition-shadow">
+                <div className="bg-pink-50 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                  <svg
+                    className="w-6 h-6 text-pink-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Creative Writing</h3>
+                <p className="text-gray-600 mb-4">
+                  Explore different narrative paths while maintaining
+                  consistency in your story world.
+                </p>
+                <div className="bg-gray-50 p-4 rounded-lg text-sm">
+                  <p className="font-medium mb-2">Example Flow:</p>
+                  <ul className="space-y-2 text-gray-600">
+                    <li className="flex items-start">
+                      <span className="text-green-500 mr-2">→</span>
+                      <span>Sci-fi story outline</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-blue-500 mr-2">↳</span>
+                      <span>Branch A: Space opera setting</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-blue-500 mr-2">↳</span>
+                      <span>Branch B: Cyberpunk setting</span>
+                    </li>
+                  </ul>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </section>
+
         {/* Use cases section */}
         <section className="py-24 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
