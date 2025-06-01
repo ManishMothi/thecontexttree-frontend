@@ -1,6 +1,6 @@
 import { useClerkApiFetch } from "./clerkApiFetch";
 import { useAuth } from "@clerk/nextjs";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useMemo } from "react";
 
 export interface ChatSession {
   id: string;
@@ -95,120 +95,138 @@ export function useSessionApi() {
     [API_BASE, clerkApiFetch]
   );
 
-  const createSession = async (
-    initialMessage: string
-  ): Promise<ChatSession> => {
-    const response = await clerkApiFetch(`${API_BASE}/api/v1/sessions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        initial_message: initialMessage,
-      }),
-    });
-
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({}));
-      throw new Error(error.detail || "Failed to create session");
-    }
-
-    const newSession = await response.json();
-
-    // Update cache
-    setCachedSessions((prev) => {
-      const newCache = new Map(prev);
-      newCache.set(newSession.id, newSession);
-      return newCache;
-    });
-
-    return newSession;
-  };
-
-  const createBranch = async (
-    sessionId: string,
-    parentId: string,
-    message: string,
-    isNewBranch: boolean = false
-  ): Promise<TreeNode> => {
-    const response = await clerkApiFetch(
-      `${API_BASE}/api/v1/sessions/${sessionId}/branches`,
-      {
+  const createSession = useCallback(
+    async (initialMessage: string): Promise<ChatSession> => {
+      const response = await clerkApiFetch(`${API_BASE}/api/v1/sessions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          parent_id: parentId,
-          user_message: message,
-          is_new_branch: isNewBranch,
+          initial_message: initialMessage,
         }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.detail || "Failed to create session");
       }
-    );
 
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({}));
-      const errorMessage = isNewBranch
-        ? "Failed to create branch"
-        : "Failed to send message";
-      throw new Error(error.detail || errorMessage);
-    }
+      const newSession = await response.json();
 
-    return response.json();
-  };
+      // Update cache
+      setCachedSessions((prev) => {
+        const newCache = new Map(prev);
+        newCache.set(newSession.id, newSession);
+        return newCache;
+      });
 
-  const deleteSession = async (sessionId: string): Promise<void> => {
-    const response = await clerkApiFetch(
-      `${API_BASE}/api/v1/sessions/${sessionId}`,
-      {
-        method: "DELETE",
+      return newSession;
+    },
+    [API_BASE, clerkApiFetch]
+  );
+
+  const createBranch = useCallback(
+    async (
+      sessionId: string,
+      parentId: string,
+      message: string,
+      isNewBranch: boolean = false
+    ): Promise<TreeNode> => {
+      const response = await clerkApiFetch(
+        `${API_BASE}/api/v1/sessions/${sessionId}/branches`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            parent_id: parentId,
+            user_message: message,
+            is_new_branch: isNewBranch,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        const errorMessage = isNewBranch
+          ? "Failed to create branch"
+          : "Failed to send message";
+        throw new Error(error.detail || errorMessage);
       }
-    );
 
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({}));
-      throw new Error(error.detail || "Failed to delete session");
-    }
+      return response.json();
+    },
+    [API_BASE, clerkApiFetch]
+  );
 
-    // Remove from cache
-    setCachedSessions((prev) => {
-      const newCache = new Map(prev);
-      newCache.delete(sessionId);
-      return newCache;
-    });
-  };
+  const deleteSession = useCallback(
+    async (sessionId: string): Promise<void> => {
+      const response = await clerkApiFetch(
+        `${API_BASE}/api/v1/sessions/${sessionId}`,
+        {
+          method: "DELETE",
+        }
+      );
 
-  const deleteBranch = async (
-    sessionId: string,
-    branchId: string
-  ): Promise<void> => {
-    const response = await clerkApiFetch(
-      `${API_BASE}/api/v1/sessions/${sessionId}/branches/${branchId}`,
-      {
-        method: "DELETE",
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.detail || "Failed to delete session");
       }
-    );
 
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({}));
-      throw new Error(error.detail || "Failed to delete branch");
-    }
+      // Remove from cache
+      setCachedSessions((prev) => {
+        const newCache = new Map(prev);
+        newCache.delete(sessionId);
+        return newCache;
+      });
+    },
+    [API_BASE, clerkApiFetch]
+  );
 
-    // Invalidate the cache for the session
-    setCachedSessions((prev) => {
-      const newCache = new Map(prev);
-      newCache.delete(sessionId);
-      return newCache;
-    });
-  };
+  const deleteBranch = useCallback(
+    async (sessionId: string, branchId: string): Promise<void> => {
+      const response = await clerkApiFetch(
+        `${API_BASE}/api/v1/sessions/${sessionId}/branches/${branchId}`,
+        {
+          method: "DELETE",
+        }
+      );
 
-  return {
-    getSessions,
-    getSession,
-    createSession,
-    createBranch,
-    deleteSession,
-    deleteBranch,
-    refreshSessions: () => getSessions(),
-  };
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.detail || "Failed to delete branch");
+      }
+
+      // Invalidate the cache for the session
+      setCachedSessions((prev) => {
+        const newCache = new Map(prev);
+        newCache.delete(sessionId);
+        return newCache;
+      });
+    },
+    [API_BASE, clerkApiFetch]
+  );
+
+  // Use useMemo to ensure the returned object is stable
+  return useMemo(
+    () => ({
+      getSessions,
+      getSession,
+      createSession,
+      createBranch,
+      deleteSession,
+      deleteBranch,
+      refreshSessions: getSessions,
+    }),
+    [
+      getSessions,
+      getSession,
+      createSession,
+      createBranch,
+      deleteSession,
+      deleteBranch,
+    ]
+  );
 }
