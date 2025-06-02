@@ -1,6 +1,5 @@
 "use client";
-import { useEffect, useState, useRef, useCallback, useMemo } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useSessionApi } from "@/utils/sessionApi";
@@ -105,22 +104,43 @@ interface SessionSummary {
 
 // Custom node component for the tree
 const ChatNode = ({ data }: { data: any }) => {
+  const [expandedUser, setExpandedUser] = useState(false);
+  const [expandedAI, setExpandedAI] = useState(false);
+  const [nodeSize, setNodeSize] = useState({ width: 280, height: "auto" });
+  const nodeRef = useRef<HTMLDivElement>(null);
   const isSelected = data.isSelected;
   const isWaiting = data.isWaiting;
+
   const truncateText = (text: string, maxLength: number) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + "...";
   };
 
+  const needsTruncation = (text: string, maxLength: number) => {
+    return text.length > maxLength;
+  };
+
+  // Calculate node width based on expansion state
+  const getNodeWidth = () => {
+    if (expandedUser || expandedAI) {
+      return Math.min(450, Math.max(350, nodeSize.width));
+    }
+    return 280;
+  };
+
   return (
     <div
+      ref={nodeRef}
       className={`bg-white rounded-xl shadow-lg border-2 transition-all ${
         isSelected
           ? "border-blue-500 shadow-xl scale-105"
           : "border-gray-200 hover:border-gray-300"
       } ${data.onClick ? "cursor-pointer" : ""}`}
       onClick={data.onClick}
-      style={{ width: "280px" }}
+      style={{
+        width: `${getNodeWidth()}px`,
+        position: "relative",
+      }}
     >
       <Handle
         type="target"
@@ -129,7 +149,16 @@ const ChatNode = ({ data }: { data: any }) => {
         style={{ top: "-6px" }}
       />
 
-      <div className="p-4">
+      <div
+        className={`p-4 ${
+          expandedUser || expandedAI
+            ? "overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100"
+            : ""
+        }`}
+        style={{
+          maxHeight: expandedUser || expandedAI ? "400px" : "none",
+        }}
+      >
         <div className="mb-3">
           <div className="flex items-center gap-2 mb-1">
             <div className="w-2 h-2 rounded-full bg-blue-500"></div>
@@ -138,11 +167,30 @@ const ChatNode = ({ data }: { data: any }) => {
             </div>
           </div>
           <div className="font-medium text-sm text-gray-900 bg-blue-50 p-2 rounded-lg">
-            {truncateText(data.userMessage, 80)}
+            <div
+              className={`${
+                expandedUser ? "whitespace-pre-wrap" : "break-words"
+              }`}
+            >
+              {expandedUser
+                ? data.userMessage
+                : truncateText(data.userMessage, 80)}
+            </div>
+            {needsTruncation(data.userMessage, 80) && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setExpandedUser(!expandedUser);
+                }}
+                className="text-xs text-blue-600 hover:text-blue-800 mt-1 font-medium"
+              >
+                {expandedUser ? "Show less" : "Show more"}
+              </button>
+            )}
           </div>
         </div>
 
-        <div>
+        <div className="mb-3">
           <div className="flex items-center gap-2 mb-1">
             <div className="w-2 h-2 rounded-full bg-green-500"></div>
             <div className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -156,14 +204,35 @@ const ChatNode = ({ data }: { data: any }) => {
                 <span className="text-green-600">Generating...</span>
               </div>
             ) : data.llmResponse ? (
-              truncateText(data.llmResponse, 120)
+              <>
+                <div
+                  className={`${
+                    expandedAI ? "whitespace-pre-wrap" : "break-words"
+                  }`}
+                >
+                  {expandedAI
+                    ? data.llmResponse
+                    : truncateText(data.llmResponse, 120)}
+                </div>
+                {needsTruncation(data.llmResponse, 120) && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setExpandedAI(!expandedAI);
+                    }}
+                    className="text-xs text-green-600 hover:text-green-800 mt-1 font-medium"
+                  >
+                    {expandedAI ? "Show less" : "Show more"}
+                  </button>
+                )}
+              </>
             ) : (
               <span className="text-gray-400 italic">No response</span>
             )}
           </div>
         </div>
 
-        <div className="mt-3 pt-3 border-t border-gray-100 flex justify-between items-center">
+        <div className="pt-3 border-t border-gray-100 flex justify-between items-center">
           <span className="text-xs text-gray-400">
             {new Date(data.createdAt).toLocaleTimeString()}
           </span>
@@ -181,6 +250,37 @@ const ChatNode = ({ data }: { data: any }) => {
           )}
         </div>
       </div>
+
+      {/* Resize handle */}
+      {(expandedUser || expandedAI) && (
+        <div
+          className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize"
+          style={{
+            background: "linear-gradient(135deg, transparent 50%, #e5e7eb 50%)",
+          }}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+            const startX = e.clientX;
+            const startWidth = nodeRef.current?.offsetWidth || 280;
+
+            const handleMouseMove = (moveEvent: MouseEvent) => {
+              const newWidth = startWidth + (moveEvent.clientX - startX);
+              setNodeSize((prev) => ({
+                ...prev,
+                width: Math.max(280, Math.min(600, newWidth)),
+              }));
+            };
+
+            const handleMouseUp = () => {
+              document.removeEventListener("mousemove", handleMouseMove);
+              document.removeEventListener("mouseup", handleMouseUp);
+            };
+
+            document.addEventListener("mousemove", handleMouseMove);
+            document.addEventListener("mouseup", handleMouseUp);
+          }}
+        />
+      )}
 
       <Handle
         type="source"
@@ -288,9 +388,9 @@ export default function PlaygroundPage() {
     const flowEdges: Edge[] = [];
 
     const nodeWidth = 300;
-    const nodeHeight = 180;
-    const levelGapY = 250;
-    const siblingGapX = 50;
+    const nodeHeight = 200; // Increased from 180
+    const levelGapY = 350; // Increased from 250
+    const siblingGapX = 100; // Increased from 50
 
     // Calculate subtree width
     const calculateSubtreeWidth = (node: TreeNode): number => {
@@ -1051,6 +1151,25 @@ export default function PlaygroundPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Global styles for scrollbar */}
+      <style jsx global>{`
+        .react-flow__node-chatNode .scrollbar-thin::-webkit-scrollbar {
+          width: 6px;
+        }
+        .react-flow__node-chatNode .scrollbar-thin::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 3px;
+        }
+        .react-flow__node-chatNode .scrollbar-thin::-webkit-scrollbar-thumb {
+          background: #888;
+          border-radius: 3px;
+        }
+        .react-flow__node-chatNode
+          .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+          background: #555;
+        }
+      `}</style>
     </>
   );
 }
