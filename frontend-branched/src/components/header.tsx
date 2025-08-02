@@ -14,6 +14,7 @@ import {
 const navLinks = [
   { name: "Dashboard", href: "/dashboard" },
   { name: "Playground", href: "/playground" },
+  { name: "Docs", href: "/docs" },
 ];
 
 export function Header() {
@@ -32,7 +33,7 @@ export function Header() {
                 height={28}
                 className="mr-2"
               />
-              TheContextTree
+              Branched
             </Link>
             <div className="hidden md:flex space-x-6">
               {navLinks.map((link) => (

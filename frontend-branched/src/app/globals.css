@@ -120,3 +120,19 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Scrollbar styles for react-flow chat nodes */
+.react-flow__node-chatNode .scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+.react-flow__node-chatNode .scrollbar-thin::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+.react-flow__node-chatNode .scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+.react-flow__node-chatNode .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

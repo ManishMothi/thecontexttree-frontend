@@ -9,13 +9,12 @@ import ReactFlow, {
   Node,
   Edge,
   Controls,
-  Background,
   useNodesState,
   useEdgesState,
   Handle,
   Position,
   ConnectionMode,
-  Panel,
+  MarkerType,
 } from "reactflow";
 import "reactflow/dist/style.css";
 
@@ -102,7 +101,7 @@ interface SessionSummary {
   first_message: string;
 }
 
-// Custom node component for the tree
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ChatNode = ({ data }: { data: any }) => {
   const [expandedUser, setExpandedUser] = useState(false);
   const [expandedAI, setExpandedAI] = useState(false);
@@ -341,19 +340,20 @@ export default function PlaygroundPage() {
 
   const { isSignedIn } = useAuth();
 
-  // Helper function to find node by id in tree structure
-  const findNodeById = (nodes: TreeNode[], id: string): TreeNode | null => {
-    for (const node of nodes) {
-      if (node.id === id) return node;
-      if (node.children) {
-        const found = findNodeById(node.children, id);
-        if (found) return found;
-      }
-    }
-    return null;
-  };
+  // // Helper function to find node by id in tree structure
+  // const findNodeById = (nodes: TreeNode[], id: string): TreeNode | null => {
+  //   for (const node of nodes) {
+  //     if (node.id === id) return node;
+  //     if (node.children) {
+  //       const found = findNodeById(node.children, id);
+  //       if (found) return found;
+  //     }
+  //   }
+  //   return null;
+  // };
 
   // Custom onNodesChange handler to detect user dragging and save positions
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   const handleNodesChange = useCallback(
     (changes: any) => {
       // Check if any change is a position change initiated by user
@@ -378,6 +378,7 @@ export default function PlaygroundPage() {
     },
     [onNodesChange, nodePositions]
   );
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   // Convert tree structure to React Flow nodes and edges
   const convertToFlowElements = (
@@ -388,7 +389,6 @@ export default function PlaygroundPage() {
     const flowEdges: Edge[] = [];
 
     const nodeWidth = 300;
-    const nodeHeight = 200; // Increased from 180
     const levelGapY = 350; // Increased from 250
     const siblingGapX = 100; // Increased from 50
 
@@ -458,7 +458,7 @@ export default function PlaygroundPage() {
             strokeWidth: selectedNode?.id === node.id ? 3 : 2,
           },
           markerEnd: {
-            type: "arrowclosed",
+            type: MarkerType.ArrowClosed,
             color: selectedNode?.id === node.id ? "#3b82f6" : "#cbd5e1",
           },
         });
@@ -514,7 +514,7 @@ export default function PlaygroundPage() {
 
     setNodes(flowNodes);
     setEdges(flowEdges);
-  }, [selectedSession]); // Remove other dependencies to avoid circular updates
+  }, [selectedSession]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Separate effect for visual updates only (selection, waiting states)
   useEffect(() => {
@@ -540,12 +540,12 @@ export default function PlaygroundPage() {
           strokeWidth: selectedNode?.id === edge.target ? 3 : 2,
         },
         markerEnd: {
-          type: "arrowclosed",
+          type: MarkerType.ArrowClosed,
           color: selectedNode?.id === edge.target ? "#3b82f6" : "#cbd5e1",
         },
       }))
     );
-  }, [selectedNode, waitingForResponse, nodes.length]); // Use nodes.length instead of nodes
+  }, [selectedNode, waitingForResponse, nodes.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Load sessions on mount
   useEffect(() => {
@@ -584,7 +584,7 @@ export default function PlaygroundPage() {
     return () => {
       mounted = false;
     };
-  }, [isSignedIn]); // Remove getSessions from dependencies
+  }, [isSignedIn]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSessionSelect = async (sessionId: string) => {
     if (selectedSession?.id === sessionId) return;
@@ -989,9 +989,9 @@ export default function PlaygroundPage() {
                       }}
                       proOptions={{ hideAttribution: true }}
                     >
-                      <Background variant="dots" />
+                      {/* <Background variant="dots" /> */}
                       <Controls />
-                      <Panel position="top-right" className="space-x-2">
+                      {/* <Panel position="top-right" className="space-x-2">
                         <Button
                           variant="outline"
                           size="sm"
@@ -1049,7 +1049,7 @@ export default function PlaygroundPage() {
                           <Trash2 className="h-4 w-4 mr-1" />
                           Delete
                         </Button>
-                      </Panel>
+                      </Panel> */}
                     </ReactFlow>
                   )}
                 </div>
@@ -1151,25 +1151,6 @@ export default function PlaygroundPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      {/* Global styles for scrollbar */}
-      <style jsx global>{`
-        .react-flow__node-chatNode .scrollbar-thin::-webkit-scrollbar {
-          width: 6px;
-        }
-        .react-flow__node-chatNode .scrollbar-thin::-webkit-scrollbar-track {
-          background: #f1f1f1;
-          border-radius: 3px;
-        }
-        .react-flow__node-chatNode .scrollbar-thin::-webkit-scrollbar-thumb {
-          background: #888;
-          border-radius: 3px;
-        }
-        .react-flow__node-chatNode
-          .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-          background: #555;
-        }
-      `}</style>
     </>
   );
 }
