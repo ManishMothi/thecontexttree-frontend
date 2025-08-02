@@ -11,14 +11,13 @@ export default function Home() {
       {/* Hero section */}
       <main>
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
-          {/* Y Combinator badge */}
           <div className="flex items-center mb-8">
             <Badge
               variant="secondary"
               className="bg-gray-100 text-gray-800 border-gray-200"
             >
               <div className="w-4 h-4 bg-gray-500 rounded-full mr-2"></div>
-              Backed by Y Combinator
+              Now Live for Early Access
             </Badge>
           </div>
 
@@ -29,7 +28,7 @@ export default function Home() {
                 The end of endless chat scrolls
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                ContextTree is a branch-and-merge memory layer for LLM apps that
+                Branched is a branch-and-merge memory layer for LLM apps that
                 keeps conversations organized, efficient, and under control. No
                 more lost context or ballooning costs.
               </p>
@@ -80,7 +79,7 @@ export default function Home() {
               <div className="flex justify-center">
                 <Image
                   src="/branched-logo.png"
-                  alt="ContextTree AI Assistant"
+                  alt="Branched AI Assistant"
                   width={400}
                   height={400}
                   className="w-full max-w-md"
@@ -312,8 +311,8 @@ export default function Home() {
                 Practical Applications Across Industries
               </h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                See how ContextTree&apos;s branching capabilities transform
-                complex workflows across different domains.
+                See how Branched&apos;s branching capabilities transform complex
+                workflows across different domains.
               </p>
             </div>
 
@@ -575,8 +574,8 @@ export default function Home() {
                 Transform Your Conversations with AI
               </h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Discover how ContextTree is revolutionizing AI conversations
-                across different industries and use cases.
+                Discover how Branched is revolutionizing AI conversations across
+                different industries and use cases.
               </p>
             </div>
 
@@ -594,7 +593,7 @@ export default function Home() {
                       Build Smarter Chatbots
                     </h3>
                     <p className="text-gray-600 mb-6">
-                      Developers use ContextTree to create AI assistants that
+                      Developers use Branched to create AI assistants that
                       remember conversations, understand context, and deliver
                       more natural interactions.
                     </p>
@@ -668,10 +667,10 @@ export default function Home() {
                         </div>
                       </div>
                       <p className="text-gray-600">
-                        &ldquo;ContextTree has completely transformed how we
-                        build conversational AI. The persistent memory feature
-                        alone has made our chatbot interactions feel so much
-                        more natural and human-like.&rdquo;
+                        &ldquo;Branched has completely transformed how we build
+                        conversational AI. The persistent memory feature alone
+                        has made our chatbot interactions feel so much more
+                        natural and human-like.&rdquo;
                       </p>
                     </div>
                   </div>
@@ -685,7 +684,7 @@ export default function Home() {
                       Enhance Customer Engagement
                     </h3>
                     <p className="text-gray-600 mb-6">
-                      Businesses use ContextTree to create AI assistants that
+                      Businesses use Branched to create AI assistants that
                       provide personalized, context-aware support to their
                       customers 24/7.
                     </p>
@@ -757,7 +756,7 @@ export default function Home() {
                         </div>
                       </div>
                       <p className="text-gray-600">
-                        &ldquo;Since implementing ContextTree, our customer
+                        &ldquo;Since implementing Branched, our customer
                         satisfaction has increased by 35%. The ability to
                         maintain context across conversations has been a
                         game-changer for our support team.&rdquo;
@@ -774,7 +773,7 @@ export default function Home() {
                       Empower Your Support Team
                     </h3>
                     <p className="text-gray-600 mb-6">
-                      Support teams use ContextTree to provide faster, more
+                      Support teams use Branched to provide faster, more
                       accurate responses while reducing ticket volume and
                       resolution times.
                     </p>
@@ -848,11 +847,11 @@ export default function Home() {
                         </div>
                       </div>
                       <p className="text-gray-600">
-                        &ldquo;ContextTree has transformed our support
-                        operations. Our team can now handle 3x more
-                        conversations with higher satisfaction ratings. The AI
-                        remembers previous interactions, so customers don&apos;t
-                        have to repeat themselves.&rdquo;
+                        &ldquo;Branched has transformed our support operations.
+                        Our team can now handle 3x more conversations with
+                        higher satisfaction ratings. The AI remembers previous
+                        interactions, so customers don&apos;t have to repeat
+                        themselves.&rdquo;
                       </p>
                     </div>
                   </div>
@@ -870,18 +869,18 @@ export default function Home() {
                 Frequently Asked Questions
               </h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Everything you need to know about ContextTree. Can&apos;t find
-                the answer you&apos;re looking for? Our team is here to help.
+                Everything you need to know about Branched. Can&apos;t find the
+                answer you&apos;re looking for? Our team is here to help.
               </p>
             </div>
 
             <div className="space-y-8">
               <div className="border-b border-gray-200 pb-6">
                 <h3 className="text-xl font-semibold mb-3">
-                  How does ContextTree maintain conversation context?
+                  How does Branched maintain conversation context?
                 </h3>
                 <p className="text-gray-600">
-                  ContextTree uses advanced AI to remember previous interactions
+                  Branched uses advanced AI to remember previous interactions
                   and maintain context throughout conversations. Our system
                   tracks conversation history, user preferences, and contextual
                   cues to deliver more natural and coherent responses, even in
@@ -891,11 +890,11 @@ export default function Home() {
 
               <div className="border-b border-gray-200 pb-6">
                 <h3 className="text-xl font-semibold mb-3">
-                  What platforms can I deploy ContextTree on?
+                  What platforms can I deploy Branched on?
                 </h3>
                 <p className="text-gray-600">
-                  ContextTree can be deployed on websites, mobile apps, and
-                  popular messaging platforms. Our flexible API and SDKs make
+                  Branched can be deployed on websites, mobile apps, and popular
+                  messaging platforms. Our flexible API and SDKs make
                   integration seamless across multiple channels, allowing you to
                   maintain consistent conversations with your users wherever
                   they are.
@@ -921,24 +920,24 @@ export default function Home() {
                   Can I customize the AI&apos;s personality and responses?
                 </h3>
                 <p className="text-gray-600">
-                  Absolutely! ContextTree offers extensive customization
-                  options. You can tailor the AI&apos;s tone, style, and
-                  knowledge base to match your brand voice and specific use
-                  case. Our intuitive dashboard makes it easy to train the AI on
-                  your specific domain knowledge and preferred responses.
+                  Absolutely! Branched offers extensive customization options.
+                  You can tailor the AI&apos;s tone, style, and knowledge base
+                  to match your brand voice and specific use case. Our intuitive
+                  dashboard makes it easy to train the AI on your specific
+                  domain knowledge and preferred responses.
                 </p>
               </div>
 
               <div>
                 <h3 className="text-xl font-semibold mb-3">
-                  How does ContextTree handle multiple languages?
+                  How does Branched handle multiple languages?
                 </h3>
                 <p className="text-gray-600">
-                  ContextTree supports multiple languages and can maintain
-                  context across language switches within the same conversation.
-                  Our AI understands and responds naturally in various
-                  languages, making it ideal for global businesses and
-                  multilingual support teams.
+                  Branched supports multiple languages and can maintain context
+                  across language switches within the same conversation. Our AI
+                  understands and responds naturally in various languages,
+                  making it ideal for global businesses and multilingual support
+                  teams.
                 </p>
               </div>
             </div>
