@@ -33,14 +33,34 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!isSignedIn) return;
+
+    let mounted = true;
     setLoading(true);
+
     clerkApiFetch(`${API_BASE}/api/v1/keys/`)
       .then(async (res) => {
         if (!res.ok) throw new Error("Failed to fetch API keys");
         return res.json();
       })
-      .then(setKeys)
-      .finally(() => setLoading(false));
+      .then((data) => {
+        if (mounted) {
+          setKeys(data);
+        }
+      })
+      .catch((error) => {
+        if (mounted) {
+          console.error("Error fetching API keys:", error);
+        }
+      })
+      .finally(() => {
+        if (mounted) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      mounted = false;
+    };
   }, [isSignedIn, API_BASE, clerkApiFetch]);
 
   const handleGenerate = async () => {
