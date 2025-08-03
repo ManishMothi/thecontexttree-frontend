@@ -52,7 +52,7 @@ export default function Home() {
               </div>
 
               {/* Trust indicators */}
-              <div>
+              {/* <div>
                 <p className="text-gray-500 mb-4">
                   Trusted by developers and businesses worldwide
                 </p>
@@ -71,7 +71,7 @@ export default function Home() {
                   <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
                   <div className="text-gray-400 font-medium text-lg">SMBs</div>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className="relative">
